@@ -1,7 +1,11 @@
-#include "string"
 #include <iostream>
+#include "App.h"
 
-void main() {
-	std::cout << "hi" << std::endl;
-	system("pause");
+
+int main(int argc, char* argv[])
+{
+    App render;
+    render.Update();
+    
+    return 0;
 }
