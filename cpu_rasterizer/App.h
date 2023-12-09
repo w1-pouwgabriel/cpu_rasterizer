@@ -13,11 +13,11 @@ public:
 	~App();
 
 	bool init();
-
-	void Update();
-	void Render();
+	void Loop();
 
 private:
+	void Render();
+
 	std::vector<int> frameBuffer;
 
 	SDL_Texture* texture;

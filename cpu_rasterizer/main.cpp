@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     App render;
-    render.Update();
+    render.Loop();
     
     return 0;
 }

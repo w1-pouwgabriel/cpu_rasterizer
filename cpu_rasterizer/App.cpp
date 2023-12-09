@@ -57,7 +57,7 @@ bool App::init()
     return success;
 }
 
-void App::Update()
+void App::Loop()
 {
     SDL_Event e;
     bool quit = false;
@@ -88,10 +88,7 @@ void App::Render()
 
     for (int x = 0; x < WIDTH; x++) {
         for (int y = 0; y < HEIGHT; y++) {
-
-
-
-
+            frameBuffer.at(x + y * WIDTH) = 255;
         }
     }
 
