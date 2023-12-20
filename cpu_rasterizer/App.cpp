@@ -86,11 +86,7 @@ void App::Render()
     frameBuffer.clear();
     frameBuffer.resize(WIDTH * HEIGHT, 0);
 
-    for (int x = 0; x < WIDTH; x++) {
-        for (int y = 0; y < HEIGHT; y++) {
-            frameBuffer.at(x + y * WIDTH) = 255;
-        }
-    }
+    Line(100, 100, 200, 200, ConvertColor(255, 255, 255, 255));
 
     // Update SDL texture with the frame buffer
     SDL_UpdateTexture(texture, NULL, frameBuffer.data(), WIDTH * sizeof(Uint32));
@@ -98,4 +94,18 @@ void App::Render()
     // Render to the screen
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
+}
+
+Uint32 App::ConvertColor(int r, int g, int b, int a)
+{
+    return (r << 24U) | (g << 16U) | (b << 8U) | a;
+}
+
+void App::Line(int x0, int y0, int x1, int y1, Uint32 Color)
+{
+    for (float t = 0.; t < 1.; t += .01) {
+        int x = x0 + (x1 - x0) * t;
+        int y = y0 + (y1 - y0) * t;
+        frameBuffer.at(x + y * WIDTH) = Color;
+    }
 }

@@ -17,8 +17,10 @@ public:
 
 private:
 	void Render();
+	Uint32 ConvertColor(int r, int g, int b, int a);
+	void Line(int x0, int y0, int x1, int y1, Uint32 Color);
 
-	std::vector<int> frameBuffer;
+	std::vector<Uint32> frameBuffer;
 
 	SDL_Texture* texture;
 	SDL_Window* window;
