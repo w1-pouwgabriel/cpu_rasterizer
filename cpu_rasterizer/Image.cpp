@@ -81,7 +81,7 @@ void Image::Draw2DWireFrame(DotObjModel* model)
             int y0 = (v1.y + 1.) * imageHeight / 3;
             int x1 = (v0.x + 1.) * imageWidth / 3;
             int y1 = (v0.y + 1.) * imageHeight / 3;
-            Line(x0, y0, x1, y1, ConvertColor(255, 255, 255, 255));
+            Line(x0, y0, x1, y1, ConvertColor(rand() % 255, rand() % 255, rand() % 255, 255));
         }
     }
 }
