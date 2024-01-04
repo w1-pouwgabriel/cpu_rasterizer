@@ -1,8 +1,13 @@
 #include "App.h"
+#include "Utils.h"
+
+#include <iostream>
+#include <ctime> 
+#include <chrono>
 
 App::App() 
 {
-    init();
+    Init();
 }
 
 App::~App()
@@ -12,7 +17,7 @@ App::~App()
     SDL_Quit();
 }
 
-bool App::init()
+bool App::Init()
 {
     //Initialization flag
     bool success = true;
@@ -47,11 +52,12 @@ bool App::init()
                     printf("Unable to create texture! SDL_Error: %s\n", SDL_GetError());
                     success = false;
                 }
+                else 
+                {
+                    frameBuffer = Image(WIDTH, HEIGHT);
+                }
             }
         }
-
-        //Other stuff that we need to initialze....
-        frameBuffer.resize(WIDTH * HEIGHT, 0);
     }
 
     return success;
@@ -64,6 +70,7 @@ void App::Loop()
 
     while (!quit)
     {
+        auto start = std::chrono::system_clock::now();
         while (SDL_PollEvent(&e))
         {
             if (e.type == SDL_QUIT)
@@ -76,36 +83,30 @@ void App::Loop()
         //Game logic
 
         // Render graphics
+        frameBuffer.Clear();
         Render();
+
+        auto end = std::chrono::system_clock::now();
+
+#ifdef _DEBUG
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+        std::cout << "elapsed time: " << elapsed_seconds.count() << "s" << std::endl;
+#endif
     }
 }
 
 void App::Render()
 {
-    // Clear the frame buffer
-    frameBuffer.clear();
-    frameBuffer.resize(WIDTH * HEIGHT, 0);
-
-    Line(100, 100, 200, 200, ConvertColor(255, 255, 255, 255));
+    //frameBuffer.Line(rand() % WIDTH, rand() % HEIGHT, rand() % WIDTH, rand() % HEIGHT, ConvertColor(255, 255, 255, 255));
+    auto model = DotObjModel("Assets/african_head.obj");
+    frameBuffer.Draw2DWireFrame(&model);
 
     // Update SDL texture with the frame buffer
-    SDL_UpdateTexture(texture, NULL, frameBuffer.data(), WIDTH * sizeof(Uint32));
+    SDL_UpdateTexture(texture, NULL, frameBuffer.GetData(), WIDTH * sizeof(Uint32));
 
     // Render to the screen
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
-}
-
-Uint32 App::ConvertColor(int r, int g, int b, int a)
-{
-    return (r << 24U) | (g << 16U) | (b << 8U) | a;
-}
-
-void App::Line(int x0, int y0, int x1, int y1, Uint32 Color)
-{
-    for (float t = 0.; t < 1.; t += .01) {
-        int x = x0 + (x1 - x0) * t;
-        int y = y0 + (y1 - y0) * t;
-        frameBuffer.at(x + y * WIDTH) = Color;
-    }
 }
